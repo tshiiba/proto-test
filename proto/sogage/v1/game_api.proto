@@ -1,0 +1,221 @@
+syntax = "proto3";
+
+package sogage.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+import "sogage/v1/common.proto";
+
+// ソシャゲでよくあるAPIを "5本" まとめたサンプル。
+service GameService {
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc GetHome(GetHomeRequest) returns (GetHomeResponse);
+  rpc DrawGacha(DrawGachaRequest) returns (DrawGachaResponse);
+  rpc StartQuest(StartQuestRequest) returns (StartQuestResponse);
+  rpc PurchaseProduct(PurchaseProductRequest) returns (PurchaseProductResponse);
+}
+
+// --- 1) Login ---
+
+message LoginRequest {
+  DeviceInfo device = 1;
+
+  oneof identity {
+    GuestIdentity guest = 2;
+    OAuthIdentity oauth = 3;
+    AppleIdentity apple = 4;
+  }
+
+  // 例: {"locale": "ja-JP", "tz": "Asia/Tokyo"}
+  map<string, string> client_meta = 10;
+}
+
+message GuestIdentity {
+  string device_id = 1;
+}
+
+message OAuthIdentity {
+  // 例: "google", "facebook"
+  string provider = 1;
+  string id_token = 2;
+}
+
+message AppleIdentity {
+  string identity_token = 1;
+  string nonce = 2;
+}
+
+message LoginResponse {
+  ResponseMeta meta = 1;
+
+  string access_token = 2;
+  google.protobuf.Timestamp expires_at = 3;
+
+  PlayerProfile profile = 4;
+  bool is_new = 5;
+
+  repeated Reward welcome_rewards = 6;
+}
+
+// --- 2) GetHome (ホーム情報の取得) ---
+
+message GetHomeRequest {
+  string access_token = 1;
+
+  // クライアントが保持するリビジョン（差分更新の例）
+  google.protobuf.Int64Value client_revision = 2;
+
+  // お知らせ/プレゼント等を分割取得する想定。
+  repeated string include_sections = 3;
+
+  Pagination pagination = 4;
+}
+
+message GetHomeResponse {
+  ResponseMeta meta = 1;
+
+  PlayerProfile profile = 2;
+
+  repeated NewsBanner banners = 3;
+  repeated PresentBoxItem presents = 4;
+
+  // 例: {"unread_news": 3, "unclaimed_presents": 10}
+  map<string, int64> counters = 5;
+}
+
+message NewsBanner {
+  string banner_id = 1;
+  string title = 2;
+  string image_url = 3;
+
+  google.protobuf.Timestamp start_at = 4;
+  google.protobuf.Timestamp end_at = 5;
+
+  map<string, string> extras = 6;
+}
+
+message PresentBoxItem {
+  string present_id = 1;
+  Reward reward = 2;
+
+  google.protobuf.Timestamp received_at = 3;
+  google.protobuf.Timestamp expires_at = 4;
+
+  bool claimed = 5;
+}
+
+// --- 3) DrawGacha ---
+
+message DrawGachaRequest {
+  string access_token = 1;
+
+  string gacha_id = 2;
+  int32 count = 3;
+
+  oneof payment {
+    PaidCurrencyPayment paid = 10;
+    TicketPayment ticket = 11;
+  }
+
+  google.protobuf.BoolValue skip_animation = 12;
+}
+
+message PaidCurrencyPayment {
+  CurrencyType currency_type = 1;
+  int64 unit_price = 2;
+}
+
+message TicketPayment {
+  string ticket_item_id = 1;
+}
+
+message DrawGachaResponse {
+  ResponseMeta meta = 1;
+
+  repeated GachaResult results = 2;
+
+  // key: CurrencyType の数値（例: 2=GEMS_FREE）
+  map<int32, int64> currency_balances = 3;
+}
+
+message GachaResult {
+  string result_id = 1;
+  ItemRarity rarity = 2;
+
+  oneof prize {
+    GachaUnit unit = 10;
+    GachaItem item = 11;
+  }
+}
+
+message GachaUnit {
+  string unit_id = 1;
+  int32 level = 2;
+}
+
+message GachaItem {
+  string item_id = 1;
+  int64 amount = 2;
+}
+
+// --- 4) StartQuest ---
+
+message StartQuestRequest {
+  string access_token = 1;
+
+  string quest_id = 2;
+  string deck_id = 3;
+
+  repeated string support_unit_ids = 4;
+
+  // 例: {"latency_ms": "23", "net": "wifi"}
+  map<string, string> client_params = 5;
+}
+
+message StartQuestResponse {
+  ResponseMeta meta = 1;
+
+  string quest_session_id = 2;
+  google.protobuf.Timestamp started_at = 3;
+
+  int64 seed = 4;
+  repeated string enemy_unit_ids = 5;
+}
+
+// --- 5) PurchaseProduct ---
+
+message PurchaseProductRequest {
+  string access_token = 1;
+
+  string product_id = 2;
+  int32 quantity = 3;
+
+  repeated string applied_coupon_ids = 4;
+
+  oneof payment {
+    CurrencyPayment currency = 10;
+    StoreReceiptPayment store = 11;
+  }
+}
+
+message CurrencyPayment {
+  CurrencyType currency_type = 1;
+  int64 amount = 2;
+}
+
+message StoreReceiptPayment {
+  StoreType store_type = 1;
+  string receipt = 2;
+  string transaction_id = 3;
+}
+
+message PurchaseProductResponse {
+  ResponseMeta meta = 1;
+
+  string order_id = 2;
+  repeated Reward rewards = 3;
+
+  // 例: {"item:ticket_10": 1, "unit:hero_001": 1}
+  map<string, int64> inventory_delta = 4;
+}

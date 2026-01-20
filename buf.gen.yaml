@@ -1,0 +1,13 @@
+version: v2
+
+plugins:
+  # protoc-gen-doc を呼び出します（プラグイン名 "doc" = バイナリ "protoc-gen-doc"）。
+  - local: protoc-gen-doc
+    out: docs
+    opt:
+      - html,index.html
+
+  - local: protoc-gen-doc
+    out: docs
+    opt:
+      - markdown,api.md
