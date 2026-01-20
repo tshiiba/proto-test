@@ -25,6 +25,8 @@
     - [StoreType](#sogage-v1-StoreType)
   
 - [sogage/v1/game_api.proto](#sogage_v1_game_api-proto)
+    - [GameService](#sogage-v1-GameService)
+  
     - [AppleIdentity](#sogage-v1-AppleIdentity)
     - [CurrencyPayment](#sogage-v1-CurrencyPayment)
     - [DrawGachaRequest](#sogage-v1-DrawGachaRequest)
@@ -54,8 +56,6 @@
     - [StoreReceiptPayment](#sogage-v1-StoreReceiptPayment)
     - [TicketPayment](#sogage-v1-TicketPayment)
   
-    - [GameService](#sogage-v1-GameService)
-  
 - [Scalar Value Types](#scalar-value-types)
 
 
@@ -64,6 +64,8 @@
 <p align="right"><a href="#top">Top</a></p>
 
 ## sogage/v1/common.proto
+
+
 
 
 
@@ -77,7 +79,7 @@
 | ----- | ---- | ----- | ----------- |
 | code | [ErrorCode](#sogage-v1-ErrorCode) |  |  |
 | message | [string](#string) |  |  |
-| details | [ApiError.DetailsEntry](#sogage-v1-ApiError-DetailsEntry) | repeated | 例: {&#34;field&#34;: &#34;gacha_id&#34;, &#34;reason&#34;: &#34;not_found&#34;} |
+| details | [ApiError.DetailsEntry](#sogage-v1-ApiError-DetailsEntry) | repeated | 例: {"field": "gacha_id", "reason": "not_found"} |
 
 
 
@@ -235,7 +237,7 @@
 | stamina | [int32](#int32) |  |  |
 | stamina_max | [int32](#int32) |  |  |
 | created_at | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  |  |
-| currencies | [PlayerProfile.CurrenciesEntry](#sogage-v1-PlayerProfile-CurrenciesEntry) | repeated | key: 任意（&#34;gold&#34;, &#34;gems_free&#34; など） |
+| currencies | [PlayerProfile.CurrenciesEntry](#sogage-v1-PlayerProfile-CurrenciesEntry) | repeated | key: 任意（"gold", "gems_free" など） |
 | unlocked_feature_flags | [string](#string) | repeated |  |
 
 
@@ -291,7 +293,7 @@
 
 
 
- 
+ <!-- end messages -->
 
 
 <a name="sogage-v1-CurrencyType"></a>
@@ -372,11 +374,9 @@
 | STORE_TYPE_DMM | 3 |  |
 
 
- 
+ <!-- end enums -->
 
- 
-
- 
+ <!-- end HasExtensions -->
 
 
 
@@ -384,6 +384,24 @@
 <p align="right"><a href="#top">Top</a></p>
 
 ## sogage/v1/game_api.proto
+
+
+
+
+<a name="sogage-v1-GameService"></a>
+
+### GameService
+ソシャゲでよくあるAPIを "5本" まとめたサンプル。
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| Login | [LoginRequest](#sogage-v1-LoginRequest) | [LoginResponse](#sogage-v1-LoginResponse) |  |
+| GetHome | [GetHomeRequest](#sogage-v1-GetHomeRequest) | [GetHomeResponse](#sogage-v1-GetHomeResponse) |  |
+| DrawGacha | [DrawGachaRequest](#sogage-v1-DrawGachaRequest) | [DrawGachaResponse](#sogage-v1-DrawGachaResponse) |  |
+| StartQuest | [StartQuestRequest](#sogage-v1-StartQuestRequest) | [StartQuestResponse](#sogage-v1-StartQuestResponse) |  |
+| PurchaseProduct | [PurchaseProductRequest](#sogage-v1-PurchaseProductRequest) | [PurchaseProductResponse](#sogage-v1-PurchaseProductResponse) |  |
+
+
 
 
 
@@ -552,7 +570,7 @@
 | profile | [PlayerProfile](#sogage-v1-PlayerProfile) |  |  |
 | banners | [NewsBanner](#sogage-v1-NewsBanner) | repeated |  |
 | presents | [PresentBoxItem](#sogage-v1-PresentBoxItem) | repeated |  |
-| counters | [GetHomeResponse.CountersEntry](#sogage-v1-GetHomeResponse-CountersEntry) | repeated | 例: {&#34;unread_news&#34;: 3, &#34;unclaimed_presents&#34;: 10} |
+| counters | [GetHomeResponse.CountersEntry](#sogage-v1-GetHomeResponse-CountersEntry) | repeated | 例: {"unread_news": 3, "unclaimed_presents": 10} |
 
 
 
@@ -602,7 +620,7 @@
 | guest | [GuestIdentity](#sogage-v1-GuestIdentity) |  |  |
 | oauth | [OAuthIdentity](#sogage-v1-OAuthIdentity) |  |  |
 | apple | [AppleIdentity](#sogage-v1-AppleIdentity) |  |  |
-| client_meta | [LoginRequest.ClientMetaEntry](#sogage-v1-LoginRequest-ClientMetaEntry) | repeated | 例: {&#34;locale&#34;: &#34;ja-JP&#34;, &#34;tz&#34;: &#34;Asia/Tokyo&#34;} |
+| client_meta | [LoginRequest.ClientMetaEntry](#sogage-v1-LoginRequest-ClientMetaEntry) | repeated | 例: {"locale": "ja-JP", "tz": "Asia/Tokyo"} |
 
 
 
@@ -689,7 +707,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| provider | [string](#string) |  | 例: &#34;google&#34;, &#34;facebook&#34; |
+| provider | [string](#string) |  | 例: "google", "facebook" |
 | id_token | [string](#string) |  |  |
 
 
@@ -763,7 +781,7 @@
 | meta | [ResponseMeta](#sogage-v1-ResponseMeta) |  |  |
 | order_id | [string](#string) |  |  |
 | rewards | [Reward](#sogage-v1-Reward) | repeated |  |
-| inventory_delta | [PurchaseProductResponse.InventoryDeltaEntry](#sogage-v1-PurchaseProductResponse-InventoryDeltaEntry) | repeated | 例: {&#34;item:ticket_10&#34;: 1, &#34;unit:hero_001&#34;: 1} |
+| inventory_delta | [PurchaseProductResponse.InventoryDeltaEntry](#sogage-v1-PurchaseProductResponse-InventoryDeltaEntry) | repeated | 例: {"item:ticket_10": 1, "unit:hero_001": 1} |
 
 
 
@@ -798,7 +816,7 @@
 | quest_id | [string](#string) |  |  |
 | deck_id | [string](#string) |  |  |
 | support_unit_ids | [string](#string) | repeated |  |
-| client_params | [StartQuestRequest.ClientParamsEntry](#sogage-v1-StartQuestRequest-ClientParamsEntry) | repeated | 例: {&#34;latency_ms&#34;: &#34;23&#34;, &#34;net&#34;: &#34;wifi&#34;} |
+| client_params | [StartQuestRequest.ClientParamsEntry](#sogage-v1-StartQuestRequest-ClientParamsEntry) | repeated | 例: {"latency_ms": "23", "net": "wifi"} |
 
 
 
@@ -871,27 +889,11 @@
 
 
 
- 
+ <!-- end messages -->
 
- 
+ <!-- end enums -->
 
- 
-
-
-<a name="sogage-v1-GameService"></a>
-
-### GameService
-ソシャゲでよくあるAPIを &#34;5本&#34; まとめたサンプル。
-
-| Method Name | Request Type | Response Type | Description |
-| ----------- | ------------ | ------------- | ------------|
-| Login | [LoginRequest](#sogage-v1-LoginRequest) | [LoginResponse](#sogage-v1-LoginResponse) |  |
-| GetHome | [GetHomeRequest](#sogage-v1-GetHomeRequest) | [GetHomeResponse](#sogage-v1-GetHomeResponse) |  |
-| DrawGacha | [DrawGachaRequest](#sogage-v1-DrawGachaRequest) | [DrawGachaResponse](#sogage-v1-DrawGachaResponse) |  |
-| StartQuest | [StartQuestRequest](#sogage-v1-StartQuestRequest) | [StartQuestResponse](#sogage-v1-StartQuestResponse) |  |
-| PurchaseProduct | [PurchaseProductRequest](#sogage-v1-PurchaseProductRequest) | [PurchaseProductResponse](#sogage-v1-PurchaseProductResponse) |  |
-
- 
+ <!-- end HasExtensions -->
 
 
 

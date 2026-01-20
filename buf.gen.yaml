@@ -5,9 +5,9 @@ plugins:
   - local: protoc-gen-doc
     out: docs
     opt:
-      - html,index.html
+      - proto/doc_templates/html.tmpl,index.html
 
   - local: protoc-gen-doc
     out: docs
     opt:
-      - markdown,api.md
+      - proto/doc_templates/markdown.tmpl,api.md
