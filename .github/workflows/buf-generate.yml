@@ -2,7 +2,6 @@ name: buf-generate
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
 
 permissions:
   contents: write
