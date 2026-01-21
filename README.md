@@ -46,6 +46,9 @@ export PATH="$PATH:$(go env GOPATH)/bin"
 buf generate
 ```
 
+※ `buf generate` は `protoc-gen-doc` をローカル実行するため、`protoc-gen-doc` が PATH に無いと失敗します。
+（インストール例は上の手順を参照）
+
 出力:
 
 - `docs/index.html`
