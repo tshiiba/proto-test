@@ -9,6 +9,7 @@ import "sogage/v1/common.proto";
 
 // ソシャゲでよくあるAPIを "5本" まとめたサンプル。
 service GameService {
+  // ログイン
   rpc Login(LoginRequest) returns (LoginResponse);
   rpc GetHome(GetHomeRequest) returns (GetHomeResponse);
   rpc DrawGacha(DrawGachaRequest) returns (DrawGachaResponse);

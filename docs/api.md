@@ -395,7 +395,7 @@
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| Login | [LoginRequest](#sogage-v1-LoginRequest) | [LoginResponse](#sogage-v1-LoginResponse) |  |
+| Login | [LoginRequest](#sogage-v1-LoginRequest) | [LoginResponse](#sogage-v1-LoginResponse) | ログイン |
 | GetHome | [GetHomeRequest](#sogage-v1-GetHomeRequest) | [GetHomeResponse](#sogage-v1-GetHomeResponse) |  |
 | DrawGacha | [DrawGachaRequest](#sogage-v1-DrawGachaRequest) | [DrawGachaResponse](#sogage-v1-DrawGachaResponse) |  |
 | StartQuest | [StartQuestRequest](#sogage-v1-StartQuestRequest) | [StartQuestResponse](#sogage-v1-StartQuestResponse) |  |
