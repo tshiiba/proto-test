@@ -6,6 +6,9 @@ Buf + `protoc-gen-doc` で `proto/` から API ドキュメントを生成する
 
 - `proto/sogage/v1/game_api.proto`
   - `Login`
+  - `LinkIdentity`
+  - `RefreshSession`
+  - `GetAccountStatus`
   - `GetHome`
   - `DrawGacha`
   - `StartQuest`

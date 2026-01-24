@@ -11,6 +11,13 @@ import "sogage/v1/common.proto";
 service GameService {
   // ログイン
   rpc Login(LoginRequest) returns (LoginResponse);
+  // 引継ぎ設定（Apple / Google 連携）
+  rpc LinkIdentity(LinkIdentityRequest) returns (LinkIdentityResponse);
+  // セッション更新（アクセストークン再発行）
+  rpc RefreshSession(RefreshSessionRequest) returns (RefreshSessionResponse);
+  // 連携状況の取得
+  rpc GetAccountStatus(GetAccountStatusRequest) returns (GetAccountStatusResponse);
+
   rpc GetHome(GetHomeRequest) returns (GetHomeResponse);
   rpc DrawGacha(DrawGachaRequest) returns (DrawGachaResponse);
   rpc StartQuest(StartQuestRequest) returns (StartQuestResponse);
@@ -53,10 +60,79 @@ message LoginResponse {
   string access_token = 2;
   google.protobuf.Timestamp expires_at = 3;
 
+  // ゲスト開始時の継続ログイン用途（Cognito Refresh Token を想定）。
+  // トークンローテーションをする場合は、RefreshSession / LinkIdentity でも更新され得る。
+  google.protobuf.StringValue refresh_token = 7;
+
+  // Cognito User Pool の ID Token を返したい場合に利用（任意）。
+  google.protobuf.StringValue id_token = 8;
+
   PlayerProfile profile = 4;
   bool is_new = 5;
 
+  // 引継ぎ設定済みか等の判定に使う。
+  bool is_guest = 9;
+  repeated LinkedIdentity linked_identities = 10;
+
   repeated Reward welcome_rewards = 6;
+}
+
+// --- 1-b) LinkIdentity (引継ぎ設定) ---
+
+message LinkIdentityRequest {
+  // 既存セッション（ゲスト or 連携済み）を特定。
+  string access_token = 1;
+  DeviceInfo device = 2;
+
+  // 連携する外部ID（Apple / Google）
+  oneof identity_to_link {
+    OAuthIdentity oauth = 3;
+    AppleIdentity apple = 4;
+  }
+}
+
+message LinkIdentityResponse {
+  ResponseMeta meta = 1;
+
+  // 連携後に再発行したトークン。
+  string access_token = 2;
+  google.protobuf.Timestamp expires_at = 3;
+  google.protobuf.StringValue refresh_token = 4;
+  google.protobuf.StringValue id_token = 5;
+
+  PlayerProfile profile = 6;
+  repeated LinkedIdentity linked_identities = 7;
+}
+
+// --- 1-c) RefreshSession ---
+
+message RefreshSessionRequest {
+  string refresh_token = 1;
+  DeviceInfo device = 2;
+}
+
+message RefreshSessionResponse {
+  ResponseMeta meta = 1;
+
+  string access_token = 2;
+  google.protobuf.Timestamp expires_at = 3;
+
+  // ローテーションする場合に新しい refresh_token を返す。
+  google.protobuf.StringValue refresh_token = 4;
+  google.protobuf.StringValue id_token = 5;
+}
+
+// --- 1-d) GetAccountStatus ---
+
+message GetAccountStatusRequest {
+  string access_token = 1;
+}
+
+message GetAccountStatusResponse {
+  ResponseMeta meta = 1;
+  PlayerProfile profile = 2;
+  bool is_guest = 3;
+  repeated LinkedIdentity linked_identities = 4;
 }
 
 // --- 2) GetHome (ホーム情報の取得) ---

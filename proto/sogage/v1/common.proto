@@ -54,6 +54,14 @@ enum StoreType {
   STORE_TYPE_DMM = 3;
 }
 
+// 連携できる代表的な外部IDプロバイダ。
+// Cognito User Pool の「Federation」(Apple / Google) を想定。
+enum IdentityProvider {
+  IDENTITY_PROVIDER_UNSPECIFIED = 0;
+  IDENTITY_PROVIDER_APPLE = 1;
+  IDENTITY_PROVIDER_GOOGLE = 2;
+}
+
 message ApiError {
   ErrorCode code = 1;
   string message = 2;
@@ -129,4 +137,15 @@ message ItemReward {
   ItemRarity rarity = 3;
   // 表示用（存在しない場合もある）
   google.protobuf.StringValue display_name = 4;
+}
+
+// アカウント連携状態（引継ぎ設定）を表す。
+message LinkedIdentity {
+  IdentityProvider provider = 1;
+
+  // 例: Cognito 側の subject / provider user id。
+  // クライアント表示に不要な場合は空にして良い。
+  google.protobuf.StringValue subject = 2;
+
+  google.protobuf.Timestamp linked_at = 3;
 }
